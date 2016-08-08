@@ -37,7 +37,7 @@ function push() {
     local _tag=$(echo $_image | awk -F: '{print $2}')
     local tag=$2
 
-    log_info "Tagging image for caching"
+    log_info "Tagging image for caching: $_image -> $image:$tag"
     docker tag -f $_image $image:$tag
 
     log_info "Pushing to $image:$tag"
