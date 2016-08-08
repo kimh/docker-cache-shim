@@ -32,7 +32,7 @@ function pull() {
 
 
     if ! docker pull $image:$tag; then
-	log_info "Cache tag $tag doesn't exist. Pulling cache from $fallback_tag cache tag"
+	log_info "Cache tag $tag doesn't exist. Pulling cache from $fallback_tag tag"
 
 	if ! docker pull $image:$fallback_tag; then
 	    log_info "Cache tag $fallback_tag doesn't exit. No cache will be used."
