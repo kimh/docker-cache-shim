@@ -26,9 +26,9 @@ function pull() {
     local image=$(echo $_image | awk -F: '{print $1}')
 
     local _tag=$(echo $_image | awk -F: '{print $2}')
-    local tag=$(cache-tag $2)
+    local tag=$2
 
-    local fallback_tag=$(cache-tag $3)
+    local fallback_tag=$3
 
     if ! docker pull $image:$tag; then
 	log_info "Cache tag $tag doesn't exist. Pulling cache from $fallback_tag tag"
@@ -44,7 +44,7 @@ function push() {
     local image=$(echo $_image | awk -F: '{print $1}')
 
     local _tag=$(echo $_image | awk -F: '{print $2}')
-    local tag=$(cache-tag $2)
+    local tag=$2
 
     log_info "Tagging image for caching: $_image -> $image:$tag"
     docker tag -f $_image $image:$tag
@@ -86,9 +86,14 @@ function main() {
     	esac
     done
 
-    local tag=${tag:-$CIRCLE_BRANCH}
+    local tag=$(cache-tag ${tag:-$CIRCLE_BRANCH})
     local default_fallback_tag="master"
-    local fallback_tag=${override_fallback_tag:-$default_fallback_tag}
+
+    if [ -z $override_fallback_tag ]; then
+	local fallback_tag=$override_fallback_tag
+    else
+	local $(cache-tag $default_fallback_tag)
+    fi
 
     log_info "Using $tag as a cache tag"
 
