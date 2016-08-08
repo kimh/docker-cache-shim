@@ -74,32 +74,38 @@ function main() {
 
     shift 2
 
-    while getopts f:t:h OPT
+    while getopts f:k:h OPT
     do
     	case $OPT in
 	    # Specify custom fallback tag instead of using circleci-cache-master
             f)  local override_fallback_tag=$OPTARG
     	    ;;
-	    # Specify tag suffix for cache. Default is $CIRCLE_BRANCH
-	    t)  local tag=$OPTARG
+	    # Specify suffix for cache tag. Default is $CIRCLE_BRANCH
+	    k)  local cache_key=$OPTARG
     	    ;;
             \?) usage_exit
     	    ;;
     	esac
     done
 
-    local tag=$(cache-tag ${tag:-$CIRCLE_BRANCH})
+    local tag=$(cache-tag ${cache_key:-$CIRCLE_BRANCH})
     local default_fallback_tag="master"
 
     if [ -n $override_fallback_tag ]; then
 	local fallback_tag=$override_fallback_tag
     else
-	local $(cache-tag $default_fallback_tag)
+	local fallback_tag=$(cache-tag $default_fallback_tag)
     fi
 
     log_info "Using $tag as a cache tag"
 
     eval $operation $image $tag $fallback_tag
+
+    if [ $operation = "pull" ]; then
+	pull $image $tag $fallback_tag
+    elif [ $operation = "push" ]; then
+	push $image $tag
+    fi
 }
 
 main $@
