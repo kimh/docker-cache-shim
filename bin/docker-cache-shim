@@ -87,7 +87,7 @@ function main() {
     	esac
     done
 
-    local tag=$(cache-tag ${tag:-$CIRCLE_BRANCH})
+    local tag=${tag:-$CIRCLE_BRANCH}
     local default_fallback_tag="latest"
     local fallback_tag=${override_fallback_tag:-$default_fallback_tag}
 
