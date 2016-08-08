@@ -20,6 +20,19 @@ function cache-tag() {
     echo -n "$prefix"-"$tag"
 }
 
+function docker-push-with-retry() {
+    for i in 1 2 3; do
+	docker push $1
+
+	if [ $? -eq 0 ]; then
+	    exit 0
+	fi
+
+	echo "Retrying...."
+   done
+
+   exit 1
+}
 
 function pull() {
     local image=$1
@@ -46,7 +59,7 @@ function push() {
     docker tag -f $_image $image:$tag
 
     log_info "Pushing to $image:$tag"
-    docker push $image:$tag
+    docker-push-with-retry $image:$tag
 }
 
 function usage_exit() {
