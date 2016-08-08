@@ -1,0 +1,73 @@
+#!/bin/bash
+
+set -e
+
+if [ "$VERBOSE" = "true" ]; then
+  echo "enabling debug mode...."
+  set -x
+fi
+
+function pull() {
+    local image=$1
+    local tag=$2
+    local fallback_tag=$3
+
+    if ! docker pull $image:$tag; then
+	echo "$tag cache doesn't exist. Pulling cache from $fallback_tag."
+
+	if docker pull $image:$fallback_tag; then
+	    echo -n "$tag" > $cache_file
+	else
+	    echo "$fallback_tag cache doesn't exit."
+	fi
+    fi
+}
+
+function push() {
+    echo "Reading image to push from $cache_file."
+
+    local image=$1
+    local tag=$2
+    echo "Pushing to $image:$tag"
+
+    docker push $image:$tag
+}
+
+function usage_exit() {
+    echo "usage_exit...."
+    exit 0
+}
+
+cache_file=/tmp/docker-cache-shim
+
+image=$2
+
+case $1 in
+	"pull" ) operation="pull" ;;
+	"push" ) operation="push" ;;
+	* ) usage_exit ;;
+esac
+
+if [ -z "${image}" ]; then
+   usage_exit
+fi
+
+shift 2
+
+while getopts f:t:h OPT
+do
+	case $OPT in
+        f)  override_fallback_tag=$OPTARG
+	    ;;
+        t)  tag=$OPTARG
+	    ;;
+        \?) usage_exit
+	    ;;
+	esac
+done
+
+tag=${tag:-$CIRCLE_BRANCH}
+default_fallback_tag="latest"
+fallback_tag=${override_fallback_tag:-$default_fallback_tag}
+
+eval $operation $image $tag $fallback_tag

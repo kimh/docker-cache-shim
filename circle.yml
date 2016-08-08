@@ -1,0 +1,10 @@
+dependencies:
+  pre:
+    - ./install.sh
+
+  override:
+    - docker-cache-shim pull docker-cache-shim -t $CIRCLE_BRANCH
+    - docker build -t docker-cache-shim:my-branch
+    - docker tag docker-cache-shim:my-branch docker-cache-shim:$CIRCLE_BRANCH
+    - docker-cache-shim push docker-cache-shim -t $CIRCLE_BRANCH
+ 
