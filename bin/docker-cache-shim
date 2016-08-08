@@ -88,9 +88,9 @@ function main() {
     	esac
     done
 
-    if [ $CIRCLE_BRANCH = "master" ] && [ -z "${tag}" ]; then
-        tag=latest
-    fi
+    #if [ $CIRCLE_BRANCH = "master" ] && [ -z "${tag}" ]; then
+    #    tag=latest
+    #fi
 
     local tag=$(cache-tag ${tag:-$CIRCLE_BRANCH})
     local default_fallback_tag="latest"
