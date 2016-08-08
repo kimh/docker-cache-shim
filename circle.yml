@@ -3,7 +3,7 @@ machine:
     - docker
 
   environment:
-    VERBOSE: true
+    VERBOSE: false
 
 dependencies:
   pre:
