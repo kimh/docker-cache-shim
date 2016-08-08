@@ -89,7 +89,7 @@ function main() {
     local tag=$(cache-tag ${tag:-$CIRCLE_BRANCH})
     local default_fallback_tag="master"
 
-    if [ -z $override_fallback_tag ]; then
+    if [ -n $override_fallback_tag ]; then
 	local fallback_tag=$override_fallback_tag
     else
 	local $(cache-tag $default_fallback_tag)
