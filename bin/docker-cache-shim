@@ -49,15 +49,14 @@ function usage_exit() {
 
 cache_file=/tmp/docker-cache-shim
 
-image=$2
-
 case $1 in
 	"pull" ) operation="pull" ;;
 	"push" ) operation="push" ;;
 	* ) usage_exit ;;
 esac
 
-if [ -z "${image}" ]; then
+# No image specified
+if [ -z "$2" ]; then
    usage_exit
 fi
 
@@ -75,12 +74,14 @@ do
 	esac
 done
 
-if [ $CIRCLE_BRANCH = "master" ] && [ -z "${image}" ]; then
+if [ $CIRCLE_BRANCH = "master" ] && [ -z "${tag}" ]; then
     tag=latest
 fi
 
 tag=${tag:-$CIRCLE_BRANCH}
 default_fallback_tag="latest"
 fallback_tag=${override_fallback_tag:-$default_fallback_tag}
+
+echo "Using $tag for caching"
 
 eval $operation $image $tag $fallback_tag
