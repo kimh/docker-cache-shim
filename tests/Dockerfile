@@ -1,3 +1,3 @@
 from busybox
 run echo aaaa
-run echo bbbb
+run echo eeee
