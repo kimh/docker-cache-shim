@@ -77,9 +77,11 @@ function main() {
     while getopts f:t:h OPT
     do
     	case $OPT in
+	    # Specify custom fallback tag instead of using circleci-cache-master
             f)  local override_fallback_tag=$OPTARG
     	    ;;
-            t)  local tag=$OPTARG
+	    # Specify tag suffix for cache. Default is $CIRCLE_BRANCH
+	    t)  local tag=$OPTARG
     	    ;;
             \?) usage_exit
     	    ;;
