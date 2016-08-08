@@ -30,7 +30,6 @@ function pull() {
 
     local fallback_tag=$3
 
-
     if ! docker pull $image:$tag; then
 	log_info "Cache tag $tag doesn't exist. Pulling cache from $fallback_tag tag"
 
@@ -87,10 +86,6 @@ function main() {
     	    ;;
     	esac
     done
-
-    #if [ $CIRCLE_BRANCH = "master" ] && [ -z "${tag}" ]; then
-    #    tag=latest
-    #fi
 
     local tag=$(cache-tag ${tag:-$CIRCLE_BRANCH})
     local default_fallback_tag="latest"
