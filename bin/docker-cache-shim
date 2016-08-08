@@ -9,9 +9,9 @@ fi
 
 function pull() {
     local _image=$1
-    local image=$(echo $full_image_name | awk -F: '{print $1}')
+    local image=$(echo $_image | awk -F: '{print $1}')
 
-    local _tag=$(echo $full_image_name | awk -F: '{print $2}')
+    local _tag=$(echo $_image | awk -F: '{print $2}')
     local tag=$2
 
     local fallback_tag=$3
@@ -30,9 +30,9 @@ function pull() {
 
 function push() {
     local _image=$1
-    local image=$(echo $full_image_name | awk -F: '{print $1}')
+    local image=$(echo $_image | awk -F: '{print $1}')
 
-    local _tag=$(echo $full_image_name | awk -F: '{print $2}')
+    local _tag=$(echo $_image | awk -F: '{print $2}')
     local tag=$2
 
     echo "tagging image for caching"
