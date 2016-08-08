@@ -1,6 +1,6 @@
 dependencies:
   pre:
-    - ./install.sh
+    - sudo ./install.sh
 
   override:
     - docker-cache-shim pull docker-cache-shim -t $CIRCLE_BRANCH
