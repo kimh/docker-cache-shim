@@ -22,12 +22,8 @@ function cache-tag() {
 
 
 function pull() {
-    local _image=$1
-    local image=$(echo $_image | awk -F: '{print $1}')
-
-    local _tag=$(echo $_image | awk -F: '{print $2}')
+    local image=$1
     local tag=$2
-
     local fallback_tag=$3
 
     if ! docker pull $image:$tag; then
@@ -54,7 +50,29 @@ function push() {
 }
 
 function usage_exit() {
-    echo "usage_exit...."
+cat << EOS
+docker-cache-shim: Shell script to workaround missing docker cache on CircleCI
+
+  Usage:
+    docker-cache-shim pull <user>/<image>
+
+       This will try to pull <user>/<image>:circleci-cache-$CIRCLE_BRANCH.
+       When there is no matching cache tag, then it will fallback to circleci-cache-master tag.
+
+    docker-cache-shim push <user>/<image>:<tag>
+
+       This will tag <user>/<image>:<tag> to <user>/<image>:circleci-cache-$CIRCLE_BRANCH so that
+       the cache will be used in the next build of the branch.
+
+  Options:
+
+    -f (optional) Specify custom fallback tag instead of using circleci-cache-master.
+                  Only meaningful for pull and noop for push because push doesn't need fallback.
+
+    -k (optional) Specify cache tag key. Default is $CIRCLE_BRANCH
+
+EOS
+
     exit 0
 }
 
@@ -78,6 +96,7 @@ function main() {
     do
     	case $OPT in
 	    # Specify custom fallback tag instead of using circleci-cache-master
+	    # Only meaningful for pull and noop for push because push doesn't need fallback.
             f)  local override_fallback_tag=$OPTARG
     	    ;;
 	    # Specify suffix for cache tag. Default is $CIRCLE_BRANCH
