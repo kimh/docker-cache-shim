@@ -13,8 +13,10 @@ function log_info() {
 
 function cache-tag() {
     local tag=$1
+    local override_prefix=$2
     local default_prefix=circleci-cache
-    local prefix=${$2:-$default_prefix}
+    local prefix=${override_prefix:-$default_prefix}
+
     echo -n "$prefix"-"$tag"
 }
 
