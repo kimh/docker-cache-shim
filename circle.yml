@@ -2,16 +2,13 @@ machine:
   services:
     - docker
 
-  environment:
-    image: "kimh/docker-cache-shim"
-
 dependencies:
   pre:
     - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
     - sudo ./install.sh
 
   override:
-    - docker-cache-shim pull $image:my-branch
-    - docker build -t $image:my-branch -f tests/Dockerfile .
-    - docker-cache-shim push $image:my-branch
+    - docker-cache-shim pull kimh/docker-cache-shim:my-branch
+    - docker build -t kimh/docker-cache-shim:my-branch -f tests/Dockerfile .
+    - docker-cache-shim push kimh/docker-cache-shim:my-branch
  
