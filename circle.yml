@@ -11,8 +11,7 @@ dependencies:
     - sudo ./install.sh
 
   override:
-    - docker-cache-shim pull $image
+    - docker-cache-shim pull $image:my-branch
     - docker build -t $image:my-branch -f tests/Dockerfile .
-    - docker tag -f $image:my-branch $image:$CIRCLE_BRANCH
-    - docker-cache-shim push $image
+    - docker-cache-shim push $image:my-branch
  
