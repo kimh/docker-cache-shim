@@ -20,9 +20,7 @@ function pull() {
     if ! docker pull $image:$tag; then
 	echo "$tag cache doesn't exist. Pulling cache from $fallback_tag."
 
-	if docker pull $image:$fallback_tag; then
-	    echo -n "$tag" > $cache_file
-	else
+	if ! docker pull $image:$fallback_tag; then
 	    echo "$fallback_tag cache doesn't exit."
 	fi
     fi
