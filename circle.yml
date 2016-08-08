@@ -13,6 +13,6 @@ dependencies:
   override:
     - docker-cache-shim pull $image -t $CIRCLE_BRANCH
     - docker build -t $image:my-branch -f tests/Dockerfile .
-    #- docker tag $image:my-branch $image:$CIRCLE_BRANCH
+    - docker tag -f $image:my-branch $image:$CIRCLE_BRANCH
     - docker-cache-shim push $image -t $CIRCLE_BRANCH
  
