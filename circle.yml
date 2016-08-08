@@ -11,7 +11,7 @@ dependencies:
     - sudo ./install.sh
 
   override:
-    - docker-cache-shim pull kimh/docker-cache-shim:my-branch -f my-name
+    - docker-cache-shim pull kimh/docker-cache-shim:my-branch -k my-name
     - docker build -t kimh/docker-cache-shim:my-branch -f tests/Dockerfile .
     - docker-cache-shim push kimh/docker-cache-shim:my-branch
  
