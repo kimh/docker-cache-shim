@@ -47,41 +47,45 @@ function usage_exit() {
     exit 0
 }
 
-cache_file=/tmp/docker-cache-shim
+function main() {
+    case $1 in
+    	"pull" ) local operation="pull" ;;
+    	"push" ) local operation="push" ;;
+    	* ) usage_exit ;;
+    esac
 
-case $1 in
-	"pull" ) operation="pull" ;;
-	"push" ) operation="push" ;;
-	* ) usage_exit ;;
-esac
+    local image=$2
 
-# No image specified
-if [ -z "$2" ]; then
-   usage_exit
-fi
+    # No image specified
+    if [ -z $image ]; then
+       usage_exit
+    fi
 
-shift 2
+    shift 2
 
-while getopts f:t:h OPT
-do
-	case $OPT in
-        f)  override_fallback_tag=$OPTARG
-	    ;;
-        t)  tag=$OPTARG
-	    ;;
-        \?) usage_exit
-	    ;;
-	esac
-done
+    while getopts f:t:h OPT
+    do
+    	case $OPT in
+            f)  local override_fallback_tag=$OPTARG
+    	    ;;
+            t)  local tag=$OPTARG
+    	    ;;
+            \?) usage_exit
+    	    ;;
+    	esac
+    done
 
-if [ $CIRCLE_BRANCH = "master" ] && [ -z "${tag}" ]; then
-    tag=latest
-fi
+    if [ $CIRCLE_BRANCH = "master" ] && [ -z "${tag}" ]; then
+        tag=latest
+    fi
 
-tag=${tag:-$CIRCLE_BRANCH}
-default_fallback_tag="latest"
-fallback_tag=${override_fallback_tag:-$default_fallback_tag}
+    local tag=${tag:-$CIRCLE_BRANCH}
+    local default_fallback_tag="latest"
+    local fallback_tag=${override_fallback_tag:-$default_fallback_tag}
 
-echo "Using $tag for caching"
+    echo "Using $tag for caching"
 
-eval $operation $image $tag $fallback_tag
+    eval $operation $image $tag $fallback_tag
+}
+
+main $@
