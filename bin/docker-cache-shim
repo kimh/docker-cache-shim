@@ -24,8 +24,6 @@ function pull() {
 }
 
 function push() {
-    echo "Reading image to push from $cache_file."
-
     local image=$1
     local tag=$2
     echo "Pushing to $image:$tag"
