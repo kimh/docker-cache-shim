@@ -68,10 +68,10 @@ docker-cache-shim: Shell script to workaround missing docker cache on CircleCI
 
   Options:
 
-    -f (optional) Specify custom fallback tag instead of using circleci-cache-master.
-                  Only meaningful for pull and noop for push because push doesn't need fallback.
+    -f Specify custom fallback tag instead of using circleci-cache-master.
+       Only meaningful for pull and noop for push because push doesn't need fallback.
 
-    -k (optional) Specify cache tag key. Default is $CIRCLE_BRANCH
+    -k Specify cache tag key. Default is $CIRCLE_BRANCH
 
 EOS
 
