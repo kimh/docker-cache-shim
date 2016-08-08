@@ -7,6 +7,10 @@ if [ "$VERBOSE" = "true" ]; then
   set -x
 fi
 
+function log_info() {
+    echo -e "\e[35m[Info: docker-cache-shim]\e[39m $@"
+}
+
 function pull() {
     local _image=$1
     local image=$(echo $_image | awk -F: '{print $1}')
@@ -18,10 +22,10 @@ function pull() {
 
 
     if ! docker pull $image:$tag; then
-	echo "$tag cache doesn't exist. Pulling cache from $fallback_tag."
+	log_info "$tag cache doesn't exist. Pulling cache from $fallback_tag."
 
 	if ! docker pull $image:$fallback_tag; then
-	    echo "$fallback_tag cache doesn't exit."
+	    log_info "$fallback_tag cache doesn't exit."
 	fi
     fi
 }
@@ -33,10 +37,10 @@ function push() {
     local _tag=$(echo $_image | awk -F: '{print $2}')
     local tag=$2
 
-    echo "tagging image for caching"
+    log_info "tagging image for caching"
     docker tag -f $_image $image:$tag
 
-    echo "Pushing to $image:$tag"
+    log_info "Pushing to $image:$tag"
     docker push $image:$tag
 }
 
@@ -81,7 +85,7 @@ function main() {
     local default_fallback_tag="latest"
     local fallback_tag=${override_fallback_tag:-$default_fallback_tag}
 
-    echo "Using $tag for caching"
+    log_info "Using $tag for caching"
 
     eval $operation $image $tag $fallback_tag
 }
