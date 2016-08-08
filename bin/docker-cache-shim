@@ -11,12 +11,16 @@ function log_info() {
     echo -e "\e[35m[Info: docker-cache-shim]\e[39m $@"
 }
 
+function cache_tag_prefix() {
+    echo -n "circleci-cache"
+}
+
 function pull() {
     local _image=$1
     local image=$(echo $_image | awk -F: '{print $1}')
 
     local _tag=$(echo $_image | awk -F: '{print $2}')
-    local tag=$2
+    local tag=$(cache_tag_prefix)-$2
 
     local fallback_tag=$3
 
@@ -35,7 +39,7 @@ function push() {
     local image=$(echo $_image | awk -F: '{print $1}')
 
     local _tag=$(echo $_image | awk -F: '{print $2}')
-    local tag=$2
+    local tag=$(cache_tag_prefix)-$2
 
     log_info "Tagging image for caching: $_image -> $image:$tag"
     docker tag -f $_image $image:$tag
