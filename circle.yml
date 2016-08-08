@@ -2,14 +2,17 @@ machine:
   services:
     - docker
 
+  environment:
+    image: "kimh/docker-cache-shim"
+
 dependencies:
   pre:
     - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
     - sudo ./install.sh
 
   override:
-    - docker-cache-shim pull docker-cache-shim -t $CIRCLE_BRANCH
-    - docker build -t docker-cache-shim:my-branch -f tests/Dockerfile .
-    - docker tag docker-cache-shim:my-branch docker-cache-shim:$CIRCLE_BRANCH
-    - docker-cache-shim push docker-cache-shim -t $CIRCLE_BRANCH
+    - docker-cache-shim pull $image -t $CIRCLE_BRANCH
+    - docker build -t $image:my-branch -f tests/Dockerfile .
+    - docker tag $image:my-branch $image:$CIRCLE_BRANCH
+    - docker-cache-shim push $image -t $CIRCLE_BRANCH
  
