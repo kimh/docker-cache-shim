@@ -88,7 +88,7 @@ function main() {
     done
 
     local tag=${tag:-$CIRCLE_BRANCH}
-    local default_fallback_tag="latest"
+    local default_fallback_tag="master"
     local fallback_tag=${override_fallback_tag:-$default_fallback_tag}
 
     log_info "Using $tag as a cache tag"
