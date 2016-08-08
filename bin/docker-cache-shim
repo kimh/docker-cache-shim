@@ -11,16 +11,20 @@ function log_info() {
     echo -e "\e[35m[Info: docker-cache-shim]\e[39m $@"
 }
 
-function cache_tag_prefix() {
-    echo -n "circleci-cache"
+function cache-tag() {
+    local tag=$1
+    local default_prefix=circleci-cache
+    local prefix=${$2:-$default_prefix}
+    echo -n "$prefix"-"$tag"
 }
+
 
 function pull() {
     local _image=$1
     local image=$(echo $_image | awk -F: '{print $1}')
 
     local _tag=$(echo $_image | awk -F: '{print $2}')
-    local tag=$(cache_tag_prefix)-$2
+    local tag=$(cache-tag $2)
 
     local fallback_tag=$3
 
@@ -34,12 +38,13 @@ function pull() {
     fi
 }
 
+
 function push() {
     local _image=$1
     local image=$(echo $_image | awk -F: '{print $1}')
 
     local _tag=$(echo $_image | awk -F: '{print $2}')
-    local tag=$(cache_tag_prefix)-$2
+    local tag=$(cache-tag $2)
 
     log_info "Tagging image for caching: $_image -> $image:$tag"
     docker tag -f $_image $image:$tag
@@ -85,7 +90,7 @@ function main() {
         tag=latest
     fi
 
-    local tag=${tag:-$CIRCLE_BRANCH}
+    local tag=${$(cache-tag $tag):-$CIRCLE_BRANCH}
     local default_fallback_tag="latest"
     local fallback_tag=${override_fallback_tag:-$default_fallback_tag}
 
