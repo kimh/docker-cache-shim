@@ -11,8 +11,16 @@ dependencies:
     - sudo ./install.sh
 
   override:
+    # Pull cached Docker image. This will first try to pull kimh/docker-cache-shim:$CIRCLE_BRANCH
+    # and if not found, fallback to kimh/docker-cache-shim:master
     - docker-cache-shim pull kimh/docker-cache-shim
-    - docker build -t kimh/docker-cache-shim:my-branch -f tests/Dockerfile .
-    - docker-cache-shim push kimh/docker-cache-shim:my-branch
+
+    # Build as usual
+    - docker build -t kimh/docker-cache-shim:production -f tests/Dockerfile .
+
+    # Push Docker image for caching.
+    # This command first run "docker tag kimh/docker-cache-shim:production kimh/docker-cache-shim:production:$CIRCLE_BRANCH"
+    # and push $CIRCLE_BRANCH tag to Docker Hub, but not pushing production tag.
+    - docker-cache-shim push kimh/docker-cache-shim:production
  
 
