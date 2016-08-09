@@ -3,13 +3,17 @@ machine:
     - docker
 
   environment:
-    VERBOSE: true
+    VERBOSE: false
 
 dependencies:
   pre:
     - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
     - sudo ./install.sh
+  
+  override:
+    - exit 0
 
+test:
   override:
     # Pull cached Docker image. This will first try to pull kimh/docker-cache-shim:$CIRCLE_BRANCH
     # and if not found, fallback to kimh/docker-cache-shim:master
