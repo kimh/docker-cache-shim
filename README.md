@@ -10,7 +10,7 @@ Usage:
 
 ```
 # bin/docker-cache-shim
-docker-cache-shim: Shell script to workaround missing docker cache on CircleCI
+docker-cache-shim: Shell script to workaround missing docker cache feature on CircleCI
 
   Usage:
     docker-cache-shim pull <user>/<image>
