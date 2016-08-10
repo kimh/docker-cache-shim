@@ -63,7 +63,7 @@ function push() {
 }
 
 function usage_exit() {
-cat << EOS
+cat << "EOS"
 docker-cache-shim: Shell script to workaround missing docker cache feature on CircleCI
 
   Usage:
