@@ -1,5 +1,7 @@
 # docker-cache-shim
 
+[![CircleCI](https://circleci.com/gh/kimh/docker-cache-shim.svg?style=svg)](https://circleci.com/gh/kimh/docker-cache-shim)
+
 Install:
 
 ```
